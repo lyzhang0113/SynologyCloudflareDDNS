@@ -4,6 +4,8 @@ set -e;
 ipv4Regex="((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])"
 ipv6Regex="(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))"
 
+# Interface for Obtaining IPv6 Addr (e.g. eth0, bond0)
+iface="eth0"
 # Enable/Disable Proxy
 ipv4proxy="true" 
 ipv6proxy="true"
@@ -17,7 +19,7 @@ ipAddr="$4"
 
 #Fetch and filter IPv6, if Synology won't provide it
 if [[ $ipv6 = "true" ]]; then
-	ip6fetch=$(ip -6 addr show eth0 | grep -oP "$ipv6Regex" || true)
+	ip6fetch=$(ip -6 addr show "$iface" | grep -oP "$ipv6Regex" || true)
 	ip6Addr=$(if [ -z "$ip6fetch" ]; then echo ""; else echo "$ip6fetch" | head -n 1; fi) # in case of NULL, echo NULL
 	recType6="AAAA"
 
