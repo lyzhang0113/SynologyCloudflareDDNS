@@ -18,7 +18,7 @@ ipAddr="$4"
 #Fetch and filter IPv6, if Synology won't provide it
 if [[ $ipv6 = "true" ]]; then
 	ip6fetch=$(ip -6 addr show eth0 | grep -oP "$ipv6Regex" || true)
-	ip6Addr=$(if [ -z "$ip6fetch" ]; then echo ""; else echo "${ip6fetch:0:$((${#ip6fetch})) - 7}"; fi) # in case of NULL, echo NULL
+	ip6Addr=$(if [ -z "$ip6fetch" ]; then echo ""; else echo "$ip6fetch" | head -n 1; fi) # in case of NULL, echo NULL
 	recType6="AAAA"
 
 	if [[ -z "$ip6Addr" ]]; then
